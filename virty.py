@@ -6,7 +6,7 @@
 
 from asyncio.tasks import sleep, wait
 from colorama.ansi import clear_screen
-import discord, json, ctypes, os, random, asyncio, requests, aiohttp, asyncio, time, datetime, re, httpx, contextlib, base64, urllib, urllib.request, sys, threading, dateutil.parser
+import discord, json, ctypes, os, random, asyncio, requests, aiohttp, asyncio, time, datetime, re, httpx, contextlib, base64, urllib, urllib.request, sys, threading
 from discord import channel
 import PIL
 from discord import guild
@@ -26,7 +26,6 @@ import requests
 import threading
 import subprocess
 import asyncio
-import colorama
 import random
 import string
 import sys
@@ -44,8 +43,6 @@ import cursor
 from art import *
 import playsound
 from datetime import datetime
-
-colorama.init(autoreset=True)
 
 # HARDWAREID
 def GetUUID():
@@ -126,7 +123,25 @@ class theme:
     color2 = color.white
     color3 = color.darkgray
 
+# def anti_ddos(ctx):
+#     try:
+#         requests.get("https://virty.xyz")
+#     except:
+#         print(f"{color.red}[!]{color.reset} virty.xyz is down")
+#         sys.exit()
 
+# def killswitch():
+#     resp = requests.get("https://virty.xyz/panel/api/v1/killswitch/")
+#     if resp.text == "0000":
+#         print(f"{color.red}[!]{color.reset} Bot is disabled by killswitch")
+#         sys.exit()
+#     elif resp.text == "1111":
+#         pass
+#     else:
+#         print(f"{color.red}[!]{color.reset} Something went wrong")
+#         sys.exit()
+
+# killswitch()
 
 # DEF
 apidomain = "virty.xyz/panel/"
@@ -136,36 +151,6 @@ motd = requests.get(f'https://{apidomain}api/info.php').json()['motd']
 
 # VERSION
 version = requests.get(f'https://{apidomain}api/info.php').json()['version']
-
-
-# UPDATER
-
-# newversion = version
-# if newversion != version:
-#     updatefile = os.path.isfile('updater.exe')
-#     if(updatefile == False):
-#         print(f'{color.yellow}[!]{color.reset} New version available: {newversion}')
-#         print(f'{color.yellow}[!]{color.reset} Downloading updater...')
-#         open("./updater.exe", "wb").write(requests.get(f"https://{apidomain}updater.exe", allow_redirects=True).content)
-#         os.system('"updater.exe"')
-#         time.sleep(3)
-
-
-# newversion = version
-# if newversion != version:
-#    updatefile = os.path.isfile('updater.exe')
-#    if(updatefile == True):
-#        print('\n')    
-#        print(color.magenta + f'██╗   ██╗██╗██████╗ ████████╗██╗   ██╗'.center(os.get_terminal_size().columns))
-#        print(color.magenta + f'██║   ██║██║██╔══██╗╚══██╔══╝╚██╗ ██╔╝'.center(os.get_terminal_size().columns))
-#        print(color.magenta + f'██║   ██║██║██████╔╝   ██║    ╚████╔╝'.center(os.get_terminal_size().columns))
-#        print(color.magenta + f'╚██╗ ██╔╝██║██╔══██╗   ██║     ╚██╔╝'.center(os.get_terminal_size().columns))
-#        print(color.magenta + f' ╚████╔╝ ██║██║  ██║   ██║      ██║ '.center(os.get_terminal_size().columns))
-#        print(color.magenta + f'  ╚═══╝  ╚═╝╚═╝  ╚═╝   ╚═╝      ╚═╝ \n'.center(os.get_terminal_size().columns))
-#        print(f"{Fore.GREEN}[Update]{Fore.RESET} {Fore.BLUE}New version avabile!")
-#        os.system("start updater.exe")
-#        os.system("pause")
-#        os._exit(0)
 
 # AUTH
 if not os.path.exists('auth.json'):
@@ -812,7 +797,6 @@ async def mod(ctx):
     embed.set_footer(text=EMBEDFOOTER, icon_url=EMBEDFOOTERICON)
     await send_message_in_mode(ctx, embed)
     print(color.magenta + 'Command Used | Mod')
-
 
 # NSFW COMMAND
 
