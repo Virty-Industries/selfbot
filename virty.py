@@ -43,6 +43,7 @@ import cursor
 from art import *
 import playsound
 from datetime import datetime
+import jwt
 
 # HARDWAREID
 def GetUUID():
@@ -144,13 +145,36 @@ class theme:
 # killswitch()
 
 # DEF
-apidomain = "virty.xyz/panel/"
+apidomain = "dev.virty.xyz/panel/"
 
 # MOTD 
 motd = requests.get(f'https://{apidomain}api/info.php').json()['motd']
 
 # VERSION
 version = requests.get(f'https://{apidomain}api/info.php').json()['version']
+
+
+# JWT AUTH
+if not os.path.exists('auth.json'):
+    print(color.red+'[AUTH]'+color.reset+' You are not logged in!')
+    username = input('[AUTH] Username >> ')
+    password = getpass.getpass('[AUTH] Password >> ')
+    auth = requests.get(f'https://{apidomain}api/auth.php?user={username}&pass={password}&hwid={hwid}')
+    if auth.content == b"User not found":
+        print(color.red+'[AUTH]'+color.reset+' Username or password is wrong!')
+        sys.exit()
+    if auth.content == b"Wrong password":
+        print(color.red+'[AUTH]'+color.reset+' Wrong password!')
+        sys.exit()
+    if auth.content == b"Wrong hwid":
+        print(color.red+'[AUTH]'+color.reset+' Wrong hwid!')
+        sys.exit()
+    if auth.content == b"User banned":
+        print(color.red+'[AUTH]'+color.reset+' You are banned!')
+        sys.exit()
+    # Check JWT token from api
+    jwt_token = requests.get(f'https://{apidomain}api/auth.php?user={username}&pass={password}&hwid={hwid}').json()['jwt']
+
 
 # AUTH
 if not os.path.exists('auth.json'):
