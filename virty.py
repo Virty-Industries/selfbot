@@ -39,7 +39,6 @@ from plyer import platforms
 import urllib
 import re
 from discord.ext.commands import *
-import cursor
 from art import *
 import playsound
 from datetime import datetime
@@ -124,28 +123,8 @@ class theme:
     color2 = color.white
     color3 = color.darkgray
 
-# def anti_ddos(ctx):
-#     try:
-#         requests.get("https://virty.xyz")
-#     except:
-#         print(f"{color.red}[!]{color.reset} virty.xyz is down")
-#         sys.exit()
-
-# def killswitch():
-#     resp = requests.get("https://virty.xyz/panel/api/v1/killswitch/")
-#     if resp.text == "0000":
-#         print(f"{color.red}[!]{color.reset} Bot is disabled by killswitch")
-#         sys.exit()
-#     elif resp.text == "1111":
-#         pass
-#     else:
-#         print(f"{color.red}[!]{color.reset} Something went wrong")
-#         sys.exit()
-
-# killswitch()
-
 # DEF
-apidomain = "dev.virty.xyz/panel/"
+apidomain = "virty.xyz/panel/"
 
 # MOTD 
 motd = requests.get(f'https://{apidomain}api/info.php').json()['motd']
@@ -153,36 +132,14 @@ motd = requests.get(f'https://{apidomain}api/info.php').json()['motd']
 # VERSION
 version = requests.get(f'https://{apidomain}api/info.php').json()['version']
 
-
-# JWT AUTH
-if not os.path.exists('auth.json'):
-    print(color.red+'[AUTH]'+color.reset+' You are not logged in!')
-    username = input('[AUTH] Username >> ')
-    password = getpass.getpass('[AUTH] Password >> ')
-    auth = requests.get(f'https://{apidomain}api/auth.php?user={username}&pass={password}&hwid={hwid}')
-    if auth.content == b"User not found":
-        print(color.red+'[AUTH]'+color.reset+' Username or password is wrong!')
-        sys.exit()
-    if auth.content == b"Wrong password":
-        print(color.red+'[AUTH]'+color.reset+' Wrong password!')
-        sys.exit()
-    if auth.content == b"Wrong hwid":
-        print(color.red+'[AUTH]'+color.reset+' Wrong hwid!')
-        sys.exit()
-    if auth.content == b"User banned":
-        print(color.red+'[AUTH]'+color.reset+' You are banned!')
-        sys.exit()
-    # Check JWT token from api
-    jwt_token = requests.get(f'https://{apidomain}api/auth.php?user={username}&pass={password}&hwid={hwid}').json()['jwt']
-
-
-# AUTH
 if not os.path.exists('auth.json'):
     print(color.red+'[AUTH]'+color.reset+' You are not logged in!')
     username = input('[AUTH] Username >> ')
     password = getpass.getpass('[AUTH] Password >> ')
     hwid = GetUUID()
-    auth = requests.get(f'https://{apidomain}api/auth.php?user={username}&pass={password}&hwid={hwid}')
+    auth = requests.get(f'https://virty.xyz/panel/api/auth.php?user={username}&pass={password}&hwid={hwid}')
+    authdata = json.loads(auth.text)
+    token = authdata['token']
     if auth.content == b"User not found":
         print(color.red+'[AUTH]'+color.reset+' User not found!')
         sys.exit()
@@ -195,43 +152,35 @@ if not os.path.exists('auth.json'):
     if auth.content == b"User banned":
         print(color.red+'[AUTH]'+color.reset+' You are banned!')
         sys.exit()
-    if auth.content == b"success":
-        data = {}
-        data = ({
-            'username' : username,
-            'password' : password
-        })
-        with open('auth.json', 'w') as f:
-            json.dump(data, f)
+    decode = jwt.decode(token, 'Z5cU49kHncghz', algorithms=['HS512'])
+    data = {}
+    data = ({
+        "username": decode['username'],
+        "password": decode['password'],
+        "hwid": decode['hwid'],
+    })
+    with open('auth.json', 'w') as f:
+        json.dump(data, f)
         print(color.green+'[AUTH]'+color.reset+' You are logged in!')
-    else:
-        print(color.red+'[AUTH]'+color.reset+' Unknown error!')
-        sys.exit()
 else:
-    with open('auth.json', 'r') as f:
+    with open('auth.json') as f:
         data = json.load(f)
-    username = data['username']
-    password = data['password']
-    hwid = GetUUID()
-    auth = requests.get(f'https://{apidomain}api/auth.php?user={username}&pass={password}&hwid={hwid}')
-    if auth.content == b"User not found":
-        print(color.red+'[AUTH]'+color.reset+' User not found!')
-        sys.exit()
-    if auth.content == b"Wrong password":
-        print(color.red+'[AUTH]'+color.reset+' Wrong password!')
-        sys.exit()
-    if auth.content == b"Wrong hwid":
-        print(color.red+'[AUTH]'+color.reset+' Wrong hwid!')
-        sys.exit()
-    if auth.content == b"User banned":
-        print(color.red+'[AUTH]'+color.reset+' You are banned!')
-        sys.exit()
-    if auth.content == b"success":
-        print(color.green+'[AUTH]'+color.reset+' You are logged in!')
-        os.system('cls' if os.name == 'nt' else 'clear')
-    else:
-        print(color.red+'[AUTH]'+color.reset+' Unknown error!')
-        sys.exit()
+        username = data['username']
+        password = data['password']
+        hwid = data['hwid']
+        auth = requests.get(f'https://virty.xyz/panel/api/auth.php?user={username}&pass={password}&hwid={hwid}')
+        authdata = json.loads(auth.text)
+        token = authdata['token']
+        decode = jwt.decode(token, 'Z5cU49kHncghz', algorithms=['HS512'])
+        if decode['username'] != username:
+            print(color.red+'[AUTH]'+color.reset+' Username or Password are wrong!')
+            sys.exit()
+        if decode['password'] != password:
+            print(color.red+'[AUTH]'+color.reset+' Username or Password are wrong!')
+            sys.exit()
+        if decode['hwid'] != hwid:
+            print(color.red+'[AUTH]'+color.reset+' Hwid is wrong!')
+            sys.exit()
 
 
 # CONFIG
@@ -294,7 +243,7 @@ if not os.path.exists('config.json'):
     if giveaway_sound == 'y':
         giveaway_sound = True
     else:
-        giveaway_sniper = False
+        giveaway_sound = False
 
     dm_logs = input('[CONFIG] DM logs (y/n) >> ')
     if dm_logs == 'y':
