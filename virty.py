@@ -402,43 +402,6 @@ for filename in os.listdir('scripts'):
         exec(open(f'./scripts/{filename}').read())
 
  
-# for filename in os.listdir('scripts'):
-#     if filename.endswith("py"):
-#         exec(open(f'./scripts/{filename}').read())
-
-
-# try {
-    #     const evtFiles = await readdir(process.cwd() + "/scripts/");
-    #     console.log(`[Script Manager] Loading ${evtFiles.length} custom scripts.`);
-    #         evtFiles.forEach(file => {
-    #             try{
-    #             const event = new(require(process.cwd() + `/scripts/${file}`))(client, config, Discord, request, fs, theme, embedcheck);
-    #             const eventName = event.eventname;
-    #             console.log(`[Script Manager] Loaded the custom script ${file}`);
-    #             client.on(eventName, (...args) => event.run(...args));
-    #             delete require.cache[require.resolve(process.cwd() + `/scripts/${file}`)];
-    #             }catch{
-    #                 console.log(FgRed +  "[Script Manager] Failed to load script " + file + FgCyan)
-    #             }
-    #         })
-    # } catch {
-    #     fs.mkdirSync(process.cwd() + "/scripts");
-    #     console.log(`Loading 0 custom scripts.`);
-    # }
-
-
-
-# def showphonenotifier(title, description, information):
-#     try:
-#         phonetoastsend = requests.get(f"{json.load(open('config.json'))['phone_notification']['url']}", json={"value1": title, "value2": description, "value3": information})
-#         phonetoastsend.close()
-#     except:
-#         None
-
-# def showtoastnotifier(description):
-#     if os.name == "nt":
-#         ToastNotifier().show_toast("Virty Selfbot",description,icon_path="icon.ico",duration=5,threaded=True)
-
 def plaintextgen(embed: discord.Embed):
     if not embed.image:
         code_block_builder = """```ini
@@ -487,22 +450,6 @@ async def on_ready():
         timeout = 10
     )
 
-
-# EVENTS
-
-# @virty.event
-# async def on_command_error(ctx, error):
-    
-#     if isinstance(error, CommandNotFound):
-#         print(Fore.RED + f"[ERROR]{Fore.RESET} {Fore.MAGENTA}Command not found.")
-#         print(color.magenta)
-#         return
-#     if isinstance(error, MissingRequiredArgument):
-#         print(Fore.RED + f"[ERROR]{Fore.RESET} {Fore.MAGENTA}Missing arguments.")
-#         print(color.magenta)
-#         return
-#     print(Fore.RED + f"[ERROR]{Fore.RESET} {Fore.MAGENTA}Wrong command usage.")
-#     print(color.magenta)
 
 remote_selfbot_users = []
 
@@ -1336,39 +1283,6 @@ async def ban(ctx, member: discord.Member = None):
   embed.description = f"{member.mention} has been banned by {virty.user.name}"
   await member.ban()
   await send_message_in_mode(ctx, embed)
-
-
-# TODO: Fix tokendisable
-
-# @virty.command(brief="disabletoken <token>")
-# async def disabletoken(self, ctx, disabletoken):
-#     await ctx.message.delete()
-#     token = disabletoken
-#     headers = {'Authorization': token, 'Content-Type': 'application/json'}
-#     res = requests.get('https://discord.com/api/v8/users/@me', headers=headers).json()
-
-#     embed = discord.Embed(title=EMBEDTITLE, description=f"`Discord Token Disabler`", color=EMBEDCOLOR)
-#     embed.add_field(name='User',value=f"`{res['username']}`",inline=True)
-#     embed.add_field(name='ID',value=f"`{res['id']}`",inline=True)
-#     embed.add_field(name='Status', value="Disabling Account...")
-#     embed.set_thumbnail(url=EMBEDTHUMBNAIL)
-#     embed.set_footer(text=EMBEDFOOTER, icon_url=EMBEDFOOTERICON)
-#     disablestatus = await ctx.send(embed=embed)
-#     for username in open('users.txt', 'r').read().splitlines():
-#         try:
-#             usr = username.split('#')
-#             r = requests.post('https://discord.com/api/v8/users/@me/relationships', headers=headers, json={'username': usr[0], 'discriminator': usr[1]})
-#             embed = discord.Embed(title=EMBEDTITLE, description=f"`Discord Token Disabler`", color=EMBEDCOLOR)
-#             disabled.add_field(name='Disabled!',value=f"`{res['username']}`",inline=True)
-#             disabled.add_field(name='Disabled ID',value=f"`{res['id']}`",inline=True)
-#             await disablestatus.edit(embed=disabled)
-            
-            
-#         except:
-#             embed = discord.Embed(title=EMBEDTITLE, description=f"`Discord Token Disabler`", color=EMBEDCOLOR)
-#             embed.add_field(name='Error Couldnt disable',value=f"`{res['username']}`",inline=True)
-#             embed.add_field(name='ID of Target',value=f"`{res['id']}`",inline=True)
-#             await disablestatus.edit(embed=disabled)
 
 @virty.command(aliases=["fakename"])
 async def genname(ctx):
