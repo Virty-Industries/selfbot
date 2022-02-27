@@ -152,7 +152,7 @@ if not os.path.exists('auth.json'):
     if auth.content == b"User banned":
         print(color.red+'[AUTH]'+color.reset+' You are banned!')
         sys.exit()
-    decode = jwt.decode(token, 'Z5cU49kHncghz', algorithms=['HS512'])
+    decode = jwt.decode(token, 'password', algorithms=['HS512'])
     data = {}
     data = ({
         "username": decode['username'],
@@ -171,7 +171,7 @@ else:
         auth = requests.get(f'https://virty.xyz/panel/api/auth.php?user={username}&pass={password}&hwid={hwid}')
         authdata = json.loads(auth.text)
         token = authdata['token']
-        decode = jwt.decode(token, 'Z5cU49kHncghz', algorithms=['HS512'])
+        decode = jwt.decode(token, 'password', algorithms=['HS512'])
         if decode['username'] != username:
             print(color.red+'[AUTH]'+color.reset+' Username or Password are wrong!')
             sys.exit()
