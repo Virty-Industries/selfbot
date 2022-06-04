@@ -215,11 +215,7 @@ if not os.path.exists('config.json'):
     else:
         ghost_mode = False
 
-    safe_mode = input('[CONFIG] Embed mode (y/n) >> ')
-    if safe_mode == 'y':
-        safe_mode = True
-    else:
-        safe_mode = False
+    safe_mode = True
 
     nitro_sniper = input('[CONFIG] Nitro sniper (y/n) >> ')
     if nitro_sniper == 'y':
